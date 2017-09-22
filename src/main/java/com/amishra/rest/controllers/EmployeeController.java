@@ -24,9 +24,14 @@ public class EmployeeController {
 	//private static final Logger myLogger = LoggerFactory.getLogger(EmployeeController.class);
 	
 	@RequestMapping(value = "rest/employee/{id}", method = RequestMethod.GET )
+	public ResponseEntity<Employee> getEmployee(@PathVariable("id") int id)	{			
 	
-	public @ResponseBody Employee getEmployee(@PathVariable("id") int id)	{			
-			Employee employee = employeeRepository.getEmployee(id); 
-			return employee;				
+		Employee employee = employeeRepository.getEmployee(id); 
+			
+		if (employee == null)
+			return new ResponseEntity<Employee>(HttpStatus.NOT_FOUND);
+			
+		return new ResponseEntity<Employee>(employee, HttpStatus.OK);
+		//return employee;				
 	}
 }
