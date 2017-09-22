@@ -39,7 +39,7 @@ public class EmployeeRepository {
 		System.out.print("\n" + employeeId + "\n");
 		query.addCriteria(
 				Criteria
-				.where("id")
+				.where("_id")
 					.is(employeeId)				
 		);															
 		
