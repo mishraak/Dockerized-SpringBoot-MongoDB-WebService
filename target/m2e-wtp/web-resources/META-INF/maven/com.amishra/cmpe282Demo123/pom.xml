@@ -42,9 +42,12 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
-		
-		
+		<!-- Jackson JSON Mapper -->
+		<dependency>
+		    <groupId>org.codehaus.woodstox</groupId>
+		    <artifactId>woodstox-core-asl</artifactId>
+		    <version>4.4.1</version>
+		</dependency>
 	</dependencies>
 	
 	<build>

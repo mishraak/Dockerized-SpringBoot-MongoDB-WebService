@@ -29,14 +29,6 @@ public class EmployeeRepository {
 	public Employee getEmployee(int employeeId){	
 		
 		Query query = new Query(); 								
-		/*query.addCriteria(
-				Criteria
-				.where("id")
-					.is(employeeId)				
-		);
-		*/
-		
-		System.out.print("\n" + employeeId + "\n");
 		query.addCriteria(
 				Criteria
 				.where("_id")
