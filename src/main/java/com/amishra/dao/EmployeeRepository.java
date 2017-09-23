@@ -1,5 +1,6 @@
 package com.amishra.dao;
 
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,11 @@ public class EmployeeRepository {
 	public void deleteEmployee(int id) {
 		Employee employee = mongoTemplate.findOne(Query.query(Criteria.where("_id").is(id)), Employee.class, employeesCollection);
 		mongoTemplate.remove(employee, employeesCollection);		
+	}
+
+
+	public List<Employee> getEmployees() {
+		return mongoTemplate.findAll(Employee.class, employeesCollection);
 	}
 	
 }

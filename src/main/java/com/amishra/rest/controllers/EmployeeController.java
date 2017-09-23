@@ -1,5 +1,7 @@
 package com.amishra.rest.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -37,6 +39,17 @@ public class EmployeeController {
 			return new ResponseEntity<Employee>(HttpStatus.NOT_FOUND);
 			
 		return new ResponseEntity<Employee>(employee, HttpStatus.OK);
+		//return employee;				
+	}
+	
+	@RequestMapping(value = "rest/employee", method = RequestMethod.GET )
+	public ResponseEntity<List<Employee>> getEmployees()	{			
+		List<Employee> employees  = employeeRepository.getEmployees();
+		
+		if (employees.size() == 0)
+			return new ResponseEntity<List<Employee>>(HttpStatus.NOT_FOUND);
+			
+		return new ResponseEntity<List<Employee>>(employees, HttpStatus.OK);
 		//return employee;				
 	}
 	
