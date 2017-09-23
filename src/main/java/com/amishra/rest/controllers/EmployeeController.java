@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -34,4 +35,21 @@ public class EmployeeController {
 		return new ResponseEntity<Employee>(employee, HttpStatus.OK);
 		//return employee;				
 	}
+	
+	
+	//Include location header
+	@RequestMapping(value = "rest/employee", method = RequestMethod.POST )
+	@ResponseBody
+	public ResponseEntity<Employee> addEmployee(@RequestBody Employee employee)	{			
+		
+		Employee retriebedEmployee = employeeRepository.getEmployee(employee.id); 
+			
+		if (retriebedEmployee != null)
+			return new ResponseEntity<Employee>(HttpStatus.CONFLICT );			
+						
+		employeeRepository.addEmployee(employee);		
+		
+		return new ResponseEntity<Employee>(employee, HttpStatus.CREATED);			
+				
+	}	
 }

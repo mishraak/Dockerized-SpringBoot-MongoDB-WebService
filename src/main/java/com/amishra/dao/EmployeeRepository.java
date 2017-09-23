@@ -1,5 +1,7 @@
 package com.amishra.dao;
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -11,30 +13,24 @@ import com.amishra.model.Employee;
 
 @Repository
 public class EmployeeRepository {
-	public static final String employeesCollection = "employees";
+	public static final String employeesCollection = "employee";
 	
 	//Dependency Injection
 	@Autowired
-	public MongoTemplate mongoTemplate;
+	private MongoTemplate mongoTemplate;
 	
-	
-	public void addEmployee(Employee employee){
-		if(!mongoTemplate.collectionExists(Employee.class))
-			mongoTemplate.createCollection(Employee.class);
-		
+	public void addEmployee(Employee employee){		
 		mongoTemplate.insert(employee, employeesCollection);			
 	}
 	
 	
-	public Employee getEmployee(int employeeId){	
-		
+	public Employee getEmployee(int employeeId){			
 		Query query = new Query(); 								
 		query.addCriteria(
 				Criteria
 				.where("_id")
 					.is(employeeId)				
-		);															
-		
+		);																	
 		return mongoTemplate.findOne(query, Employee.class, employeesCollection);			
 	}
 	
