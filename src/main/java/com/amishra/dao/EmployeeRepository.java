@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import com.amishra.model.Employee;
@@ -32,6 +33,18 @@ public class EmployeeRepository {
 					.is(employeeId)				
 		);																	
 		return mongoTemplate.findOne(query, Employee.class, employeesCollection);			
+	}
+
+
+	public Employee updateEmployee(int id, Employee employee) {
+		Query query = new Query();
+		query.addCriteria(Criteria.where("_id").is(id));
+ 
+		Update update = new Update();
+		update.set("fname", employee.getFname());
+		update.set("lname", employee.lname);		
+		mongoTemplate.updateFirst(query, update, Employee.class);        
+        return employee;		
 	}
 	
 }

@@ -5,6 +5,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,26 +43,32 @@ public class EmployeeController {
 	
 	//Include location header
 	@RequestMapping(value = "rest/employee", method = RequestMethod.POST )
-	@ResponseBody
-	
-	public ResponseEntity<Employee> addEmployee(@RequestBody Employee employee)	{			
+	@ResponseBody	
+	public ResponseEntity<Employee> addEmployee(@RequestBody Employee employee)	{							
 		
-		
-		Employee retrievedEmployee = employeeRepository.getEmployee(employee.id); 
-			
+		Employee retrievedEmployee = employeeRepository.getEmployee(employee.id); 			
 		if (retrievedEmployee != null)
-			return new ResponseEntity<Employee>(HttpStatus.CONFLICT );			
+			return new ResponseEntity<Employee>(HttpStatus.CONFLICT );					
 		
 		employeeRepository.addEmployee(employee);	
-
-		HttpHeaders responseHeaders = new HttpHeaders();
 		
+		HttpHeaders responseHeaders = new HttpHeaders();		
 		responseHeaders.setLocation(new UriTemplate("/rest/employees").expand(employee.id));
 		
-		return new ResponseEntity<Employee>(employee, responseHeaders, HttpStatus.CREATED);
-							
+		return new ResponseEntity<Employee>(employee, responseHeaders, HttpStatus.CREATED);																		
+	}
+	
+	
+	@RequestMapping(value = "rest/employee/{id}", method = RequestMethod.PUT)
+	@ResponseBody
+	public ResponseEntity<Employee> updateEmployee(@PathVariable("id") int id, @RequestBody Employee employee) {
+		Employee emp = employeeRepository.updateEmployee(id, employee);
+		if (emp != null) {
+			return new ResponseEntity<Employee>(employee, HttpStatus.OK);			
+		} else {			
+			return new ResponseEntity<Employee>(HttpStatus.NOT_FOUND);
+		}
 		
-		//return new ResponseEntity<Employee>(employee, HttpStatus.CREATED);			
-				
-	}	
+	}
+	
 }
