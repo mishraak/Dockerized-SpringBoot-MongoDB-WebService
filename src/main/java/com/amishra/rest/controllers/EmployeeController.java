@@ -71,4 +71,18 @@ public class EmployeeController {
 		
 	}
 	
+	@RequestMapping(value = "rest/employee/{id}", method = RequestMethod.DELETE )
+	public ResponseEntity<Employee> deleteEmployee(@PathVariable("id") int id)	{			
+	
+		Employee emp = employeeRepository.getEmployee(id); 
+			
+		if (emp == null)
+			return new ResponseEntity<Employee>(HttpStatus.NOT_FOUND);
+			
+		employeeRepository.deleteEmployee(id); 		
+		return new ResponseEntity<Employee>(HttpStatus.OK);
+	}
+	
+	
+	
 }

@@ -46,5 +46,11 @@ public class EmployeeRepository {
 		mongoTemplate.updateFirst(query, update, Employee.class);        
         return employee;		
 	}
+
+
+	public void deleteEmployee(int id) {
+		Employee employee = mongoTemplate.findOne(Query.query(Criteria.where("_id").is(id)), Employee.class, employeesCollection);
+		mongoTemplate.remove(employee, employeesCollection);		
+	}
 	
 }
