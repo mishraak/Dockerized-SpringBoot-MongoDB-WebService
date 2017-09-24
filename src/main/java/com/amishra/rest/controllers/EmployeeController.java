@@ -7,13 +7,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
+
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.util.UriComponents;
+
 import org.springframework.web.util.UriTemplate;
 
 import com.amishra.dao.EmployeeRepository;
@@ -46,8 +46,8 @@ public class EmployeeController {
 	public ResponseEntity<List<Employee>> getEmployees()	{			
 		List<Employee> employees  = employeeRepository.getEmployees();
 		
-		if (employees.size() == 0)
-			return new ResponseEntity<List<Employee>>(HttpStatus.NOT_FOUND);
+		//if (employees.size() == 0)
+			//return new ResponseEntity<List<Employee>>(HttpStatus.NOT_FOUND);
 			
 		return new ResponseEntity<List<Employee>>(employees, HttpStatus.OK);
 		//return employee;				
@@ -75,7 +75,12 @@ public class EmployeeController {
 	@RequestMapping(value = "rest/employee/{id}", method = RequestMethod.PUT)
 	@ResponseBody
 	public ResponseEntity<Employee> updateEmployee(@PathVariable("id") int id, @RequestBody Employee employee) {
+		
+		if (employee.getId()  != id)
+			return new ResponseEntity<Employee>(HttpStatus.NOT_FOUND);
+				
 		Employee emp = employeeRepository.updateEmployee(id, employee);
+
 		if (emp != null) {
 			return new ResponseEntity<Employee>(employee, HttpStatus.OK);			
 		} else {			

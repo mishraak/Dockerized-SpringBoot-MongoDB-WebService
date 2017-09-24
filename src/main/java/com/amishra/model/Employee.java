@@ -3,7 +3,7 @@ package com.amishra.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-//POJO Person
+//POJO Employee
 @Document
 public class Employee {
 	
@@ -52,5 +52,8 @@ public class Employee {
 	public String toString() {
 		return "Person [id=" + id + ", fname=" + fname + ", lname=" + lname + "]";
 	}
+	
+	
+	
 	
 }	

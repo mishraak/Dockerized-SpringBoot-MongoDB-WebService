@@ -42,7 +42,7 @@ public class EmployeeRepository {
 		query.addCriteria(Criteria.where("_id").is(id));
  
 		Update update = new Update();
-		update.set("fname", employee.getFname());
+		update.set("fname", employee.fname);
 		update.set("lname", employee.lname);		
 		mongoTemplate.updateFirst(query, update, Employee.class);        
         return employee;		
