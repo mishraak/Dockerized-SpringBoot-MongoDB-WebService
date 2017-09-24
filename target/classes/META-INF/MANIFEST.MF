@@ -1,0 +1,9 @@
+Manifest-Version: 1.0
+Implementation-Title: cmpe282Akshay673
+Implementation-Version: 0.0.1-SNAPSHOT
+Built-By: amishra
+Implementation-Vendor-Id: com.amishra
+Build-Jdk: 1.8.0_131
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: Pivotal Software, Inc.
+
