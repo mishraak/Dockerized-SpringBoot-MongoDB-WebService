@@ -2,13 +2,18 @@ package com.amishra.dao;
 
 import java.util.List;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
+
+import com.amishra.model.Employee;
 import com.amishra.model.Project;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Repository
 public class ProjectRepository {
@@ -40,10 +45,33 @@ public class ProjectRepository {
 			query.addCriteria(Criteria.where("_id").is(id));
 	 
 			Update update = new Update();
-			update.set("name", project.name);
-			update.set("budget", project.budget );		
+			
+			Project retrievedProject = getProject(id);		
+			
+			ObjectMapper mapper = new ObjectMapper();
+			
+			String jsonInString = null;
+			try {
+				 jsonInString = mapper.writeValueAsString(project);
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+			}
+
+			JSONObject jo = new JSONObject(jsonInString);
+			
+				if ( jo.isNull("name"))
+					project.name=retrievedProject.name;
+			
+				
+				if ( jo.isNull("budget"))
+					project.budget=retrievedProject.budget;
+			
+			update.set("name", project.name);							
+			update.set("budget", project.budget);
+			
 			mongoTemplate.updateFirst(query, update, Project.class);        
-	        return project;		
+	        
+			return project;	
 		}
 
 

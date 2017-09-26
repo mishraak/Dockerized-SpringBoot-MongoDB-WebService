@@ -2,6 +2,8 @@ package com.amishra.rest.controllers;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,13 +19,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriTemplate;
 
 import com.amishra.dao.EmployeeRepository;
+import com.amishra.exception.NegativeIDException;
+import com.amishra.exception.ZeroRecordsFound;
 import com.amishra.model.Employee;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 
 @Controller
 @RequestMapping("/")
 public class EmployeeController {
+			
 	
 	@Autowired
 	private EmployeeRepository employeeRepository;
@@ -46,11 +52,17 @@ public class EmployeeController {
 	public ResponseEntity<List<Employee>> getEmployees()	{			
 		List<Employee> employees  = employeeRepository.getEmployees();
 		
-		//if (employees.size() == 0)
-			//return new ResponseEntity<List<Employee>>(HttpStatus.NOT_FOUND);
-			
+		try {
+			if (employees.size() == 0)
+				//return new ResponseEntity<List<Employee>>(HttpStatus.NOT_FOUND);
+				//throw new ZeroRecordsFound();
+				throw new Exception();
+		}
+		catch (Exception e) {
+			return new ResponseEntity<List<Employee>>(HttpStatus.NOT_FOUND);
+		}
+		
 		return new ResponseEntity<List<Employee>>(employees, HttpStatus.OK);
-		//return employee;				
 	}
 	
 	
@@ -63,10 +75,15 @@ public class EmployeeController {
 		if (retrievedEmployee != null)
 			return new ResponseEntity<Employee>(HttpStatus.CONFLICT );					
 		
+		if (employee.id < 0)
+			throw new NegativeIDException();
+		
 		employeeRepository.addEmployee(employee);	
 		
 		HttpHeaders responseHeaders = new HttpHeaders();		
-		responseHeaders.setLocation(new UriTemplate("/rest/employees").expand(employee.id));
+		//responseHeaders.setLocation(new UriTemplate("/rest/employees").expand(employee.id));
+		
+		responseHeaders.add("Location", "/rest/employees/" + employee.id);
 		
 		return new ResponseEntity<Employee>(employee, responseHeaders, HttpStatus.CREATED);																		
 	}
