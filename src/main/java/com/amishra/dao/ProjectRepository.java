@@ -3,6 +3,8 @@ package com.amishra.dao;
 import java.util.List;
 
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -19,6 +21,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class ProjectRepository {
 
 	public static final String projectsCollection = "project";
+	
+	private static final Logger logger = LoggerFactory.getLogger(EmployeeRepository.class);
 	
 	//Dependency Injection
 		@Autowired
@@ -63,9 +67,10 @@ public class ProjectRepository {
 					project.name=retrievedProject.name;
 			
 				
-				if ( jo.isNull("budget"))
-					project.budget=retrievedProject.budget;
-			
+				if ( jo.get("budget").equals(new Double(0.0)))
+					project.budget=retrievedProject.budget;				
+ 						
+				
 			update.set("name", project.name);							
 			update.set("budget", project.budget);
 			
