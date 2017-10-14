@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.UriTemplate;
 
 import com.amishra.dao.ProjectRepository;
+import com.amishra.exception.NegativeIDException;
+import com.amishra.exception.ZeroRecordsFound;
+import com.amishra.model.Employee;
 import com.amishra.model.Project;
 
 @Controller
@@ -38,9 +41,16 @@ public class ProjectController {
 	public ResponseEntity<List<Project>> getProject()	{			
 		List<Project> projects  = projectRepository.getProjects();
 		
-		//if (projects.size() == 0)
-			//return new ResponseEntity<List<Project>>(HttpStatus.NOT_FOUND);
+		try{
 			
+			if (projects.size() == 0)
+				//return new ResponseEntity<List<Project>>(HttpStatus.NOT_FOUND);
+				//throw new ZeroRecordsFound();
+				throw new Exception();
+		}		
+		catch (Exception e) {
+			return new ResponseEntity<List<Project>>(HttpStatus.NOT_FOUND);
+		}			
 		return new ResponseEntity<List<Project>>(projects, HttpStatus.OK);				
 	}
 	
@@ -54,10 +64,14 @@ public class ProjectController {
 		if (retrievedProject != null)
 			return new ResponseEntity<Project>(HttpStatus.CONFLICT );					
 		
+		if (project.id < 0)
+			throw new NegativeIDException();
+		
 		projectRepository.addProject(project);	
 		
 		HttpHeaders responseHeaders = new HttpHeaders();		
-		responseHeaders.setLocation(new UriTemplate("/rest/project").expand(project.id));
+		//responseHeaders.setLocation(new UriTemplate("/rest/project").expand(project.id));
+		responseHeaders.add("Location", "/rest/project/" + project.id);
 		
 		return new ResponseEntity<Project>(project, responseHeaders, HttpStatus.CREATED);																		
 	}
