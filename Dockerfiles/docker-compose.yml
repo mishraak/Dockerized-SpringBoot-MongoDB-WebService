@@ -1,0 +1,20 @@
+version: '2'
+services:
+  app:
+    build: .
+    container_name: appAkshay673  
+    ports:
+    - 8080:8080    
+    depends_on:
+    - dbAkshay673
+    links:
+    - dbAkshay673:dbAkshay673
+    restart: always     
+
+  dbAkshay673:
+    image: mongo
+    container_name: dbAkshay673
+
+volumes:
+  data:
+    driver: local

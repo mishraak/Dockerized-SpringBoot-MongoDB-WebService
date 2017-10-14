@@ -1,8 +1,14 @@
 package com.amishra.dao;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -11,10 +17,17 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
 
 import com.amishra.model.Employee;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @Repository
 public class EmployeeRepository {
+	private static final Logger logger = LoggerFactory.getLogger(EmployeeRepository.class);
+	
 	public static final String employeesCollection = "employee";
 	
 	//Dependency Injection
@@ -42,10 +55,44 @@ public class EmployeeRepository {
 		query.addCriteria(Criteria.where("_id").is(id));
  
 		Update update = new Update();
-		update.set("fname", employee.fname);
-		update.set("lname", employee.lname);		
+		
+		Employee retrievedEmployee = getEmployee(id);
+		
+		logger.info("fname : " + employee.fname );
+		
+		logger.info("lname : " + employee.lname );
+		
+		
+		ObjectMapper mapper = new ObjectMapper();
+		
+		String jsonInString = null;
+		try {
+			 jsonInString = mapper.writeValueAsString(employee);
+			logger.info(jsonInString);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+
+
+		
+		JSONObject jo = new JSONObject(jsonInString);
+		
+		
+			if ( jo.isNull("fname"))
+				employee.fname=retrievedEmployee.fname;
+		
+			
+			if ( jo.isNull("lname"))
+				employee.lname=retrievedEmployee.lname;
+		
+		
+		update.set("fname", employee.fname);							
+		update.set("lname", employee.lname);
+		
 		mongoTemplate.updateFirst(query, update, Employee.class);        
-        return employee;		
+        
+		return employee;	
+        
 	}
 
 

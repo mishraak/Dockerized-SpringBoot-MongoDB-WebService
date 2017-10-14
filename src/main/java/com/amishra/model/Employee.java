@@ -1,5 +1,8 @@
 package com.amishra.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -52,8 +55,5 @@ public class Employee {
 	public String toString() {
 		return "Person [id=" + id + ", fname=" + fname + ", lname=" + lname + "]";
 	}
-	
-	
-	
 	
 }	
